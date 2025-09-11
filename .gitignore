@@ -8,3 +8,4 @@ iso/
 *.ovf
 *.zip
 *.tar.gz
+!iso/.gitkeep
