@@ -1,0 +1,10 @@
+iso/
+*.iso
+*.img
+*.vdi
+*.vmdk
+*.vhd*
+*.ova
+*.ovf
+*.zip
+*.tar.gz
