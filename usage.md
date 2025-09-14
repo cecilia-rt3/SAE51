@@ -1,80 +1,66 @@
-#usage.md
-# Guide d’utilisation du script `genMV.sh`
+# Guide d’utilisation – Script genMV.sh
 
-**Auteur :** Cécilia Emmanuelle Boukaka 
-**Date :** 11/09/2025 
+Auteurs : BOUKAKA Cécilia, KAMGA Camila
+Date : septembre 2025 
 
 ## Résumé
-Ce document décrit la manière d’utiliser le script `genMV.sh` développé dans le cadre de la SAE51 (BUT R&T). 
-Il permet de créer, configurer et gérer des machines virtuelles VirtualBox via la ligne de commande. 
-Les fonctionnalités incluent la gestion des ISO, l’initialisation PXE et la pose de métadonnées. 
-Des limites sont toutefois présentes (nécessité d’activer la virtualisation matérielle).
+Ce document décrit l’utilisation du script `genMV.sh`, développé pour automatiser la création et la gestion de machines virtuelles sous VirtualBox. 
+Le script gère la création de VMs Debian/Ubuntu, leur configuration, l’attachement d’ISO et l’ajout de métadonnées (date et auteur). 
+Il inclut aussi les fonctions de suppression, démarrage et arrêt. 
+Nous présentons ici la manière de l’utiliser, ses limites et les problèmes rencontrés.
 
 ---
 
-## Utilisation du script
+1. Utilisation
+Rendre le script exécutable :
 
-### Commandes disponibles
 #bash
-./genMV.sh Q1             # Démo (crée 'Debian1' puis supprime après 5s)
-./genMV.sh L              # Lister les VMs + métadonnées
-./genMV.sh N <vm>         # Créer une nouvelle VM
-./genMV.sh D <vm>         # Démarrer une VM (GUI)
-./genMV.sh A <vm>         # Arrêter une VM
-./genMV.sh S <vm>         # Supprimer une VM
-./genMV.sh I <vm> <iso>   # Insérer un ISO et booter dessus
-
-Exemple :
-
-./genMV.sh I MonServeur ~/Téléchargements/debian-12.8.0-amd64-netinst.iso
-
-Attache l'ISO à la VM et la démarre pour installation.
-Fonctionnalités automatiques
-Support PXE (Q3)
-
-    Téléchargement automatique des fichiers netboot Debian Trixie
-    Configuration TFTP dans ~/.config/VirtualBox/TFTP/
-    Création automatique de liens PXE pour chaque VM
-
-Métadonnées (Q5)
-
-Chaque VM créée contient automatiquement :
-
-    Date de création
-    Nom de l'utilisateur créateur
-
-Gestion des erreurs
-
-    Vérification de l'existence des VMs
-    Vérification de l'état (running/stopped)
-    Validation des fichiers ISO
-    Gestion gracieuse des échecs
-
-Exemples d'utilisation typiques
-Workflow complet d'installation Debian
-
-# 1. Créer la VM
-./genMV.sh N DebianServeur
-
-# 2. Installer Debian via ISO
-./genMV.sh I DebianServeur ~/debian-12.8.0-amd64-netinst.iso
+chmod +x genMV.sh
 
 
-Limites connues
+#Commandes disponibles :
 
-Le script nécessite VirtualBox installé et accessible dans le $PATH.
+./genMV.sh L              # Lister toutes les VMs
+./genMV.sh N Debian1      # Créer une VM Debian1
+./genMV.sh D Debian1      # Démarrer Debian1
+./genMV.sh A Debian1      # Arrêter Debian1
+./genMV.sh S Debian1      # Supprimer Debian1
 
-La virtualisation matérielle (VT-x/AMD-V) doit être activée dans le BIOS/UEFI.
-Dans un environnement en VM (TP), il faut que l’hôte autorise la virtualisation imbriquée.
 
-Le support PXE nécessite une connexion internet lors du premier lancement.
+2. Métadonnées
+
+Chaque VM créée contient des métadonnées stockées via VBoxManage setextradata :
+
+Date de création
+
+Auteur / utilisateur
+
+Ces informations sont affichées avec ./genMV.sh L.
 
 
-Problèmes rencontrés
+3. Limites
 
-Erreur VERR_VMX_NO_VMX : virtualisation non disponible.
+Le disque .vdi est créé dans le répertoire courant (./NomVM.vdi), et non dans le dossier par défaut de VirtualBox.
 
-Métadonnées parfois manquantes si la VM est créée à la main (corrigé avec ./genMV.sh M <vm>).
+L’ISO doit être présent dans le chemin indiqué dans le script ($HOME/SAE51_Test/iso/...).
 
-Gestion des ISO : fonctionne uniquement si le chemin est correct.
+Le script suppose que VirtualBox et VBoxManage sont installés et accessibles dans le PATH.
+
+
+4. Problèmes rencontrés
+
+Gestion des chemins : initialement configuré dans ~/VirtualBox VMs/, modifié pour simplifier.
+
+Différences entre arrêt ACPI (propre) et poweroff (forcé).
+
+Parsing des métadonnées : nécessité d’utiliser awk pour extraire proprement les valeurs.
+
+Nettoyage automatique du fichier temporaire lors du listing.
+
+
+5. Évolutions possibles
+
+Ajouter le mode headless (démarrage sans GUI).
+
+Intégrer une installation Debian automatisée via fichier preseed.
 
