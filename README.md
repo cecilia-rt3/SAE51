@@ -22,6 +22,19 @@ L’objectif est d’automatiser la gestion de machines virtuelles (VMs) Virtual
 - `versions/` → versions intermédiaires (V1 à V4)
 - `iso/` → ISO téléchargés (non inclus dans GitHub)
 
+## Dossier `iso/`
+
+Le dossier `iso/` est prévu pour stocker localement les images ISO nécessaires à l’installation
+ou au test des machines virtuelles (par ex. `debian-12.x-amd64-netinst.iso`, `ubuntu-22.04.iso`).
+
+#Important :
+- Ce dossier n’est "pas versionné" dans GitHub (exclu via `.gitignore`), car les fichiers ISO sont trop volumineux. 
+- Chaque utilisateur doit télécharger ses propres images ISO et les placer manuellement dans `iso/`. 
+- Exemple : 
+  'bash'
+  ~/SAE51/iso/ubuntu-22.04.5-desktop-amd64.iso
+
+
 ## Auteurs
 - BOUKAKA Cécilia, KAMGA Camila – BUT3 R&T – IUT de Rouen 
 
